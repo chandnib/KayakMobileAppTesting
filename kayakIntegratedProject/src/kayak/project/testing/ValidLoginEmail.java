@@ -54,7 +54,16 @@ public class ValidLoginEmail {
 	
 	@Test
     public void testEValidLogin() {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.findElementByAccessibilityId("Open navigation drawer").click();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		
+		driver.findElement(By.id("com.kayak.android:id/navigation_drawer_sign_in_text")).click();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		driver.findElementByName("Sign in with your email").click();
+		//driver.findElementByName("Sign in with your email").click();
+		//select Sign-up Option as all the cases where Count!= noOfTests teh page loaded is welcome back page and in order o test sign-up page is needed
+		driver.findElement(By.id("com.kayak.android:id/signupBtn")).click();
 		driver.findElementByName("Sign in with your email").click();
 		//read number of test scripts to be executed
 		int noOfTests = Integer.parseInt(testData.getProperty("noofvescripts"));
@@ -73,9 +82,9 @@ public class ValidLoginEmail {
 				}
 		
 			//Set the input field for email from the properties file
-			driver.findElementByName("Save up to 35% with hotel deals").sendKeys(testData.getProperty("nameve"+noOfTests));
+			driver.findElementById("com.kayak.android:id/preferences_signup_username").sendKeys(testData.getProperty("nameve"+noOfTests));
 			//Set the input field for Password from the properties file
-			driver.findElementByName("Get flight status alerts").sendKeys(testData.getProperty("passve"+noOfTests));
+			driver.findElementById("com.kayak.android:id/preferences_signup_password").sendKeys(testData.getProperty("passve"+noOfTests));
 			//Set the preference for email option(yes /no)
 			String email=testData.getProperty("emailve"+noOfTests);
 		
@@ -100,8 +109,8 @@ public class ValidLoginEmail {
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			//The Verify alert box appears only for the first login as it then sets the preferences 
 			//which get cleared only when the app is relaunched.So a check is done to select the alert.
-			if(count==noOfTests)
-				driver.findElement(By.id("android:id/button1")).click();
+			//if(count==noOfTests)
+			//	driver.findElement(By.id("android:id/button1")).click();
 			//Select the Navigation Drawer
 			driver.findElementByAccessibilityId("Open navigation drawer").click();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);

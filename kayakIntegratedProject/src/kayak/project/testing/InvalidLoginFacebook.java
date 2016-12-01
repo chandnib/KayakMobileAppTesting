@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -49,13 +50,35 @@ public class InvalidLoginFacebook {
 	
 	@Test
     public void testInvalidFBLogin() {
-		driver.findElementByName("Connect with Facebook").click();
+		driver.findElementByAccessibilityId("Open navigation drawer").click();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		
+		driver.findElement(By.id("com.kayak.android:id/navigation_drawer_sign_in_text")).click();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		
+		//select Sign-up Option as all the cases where Count!= noOfTests teh page loaded is welcome back page and in order o test sign-up page is needed
+		WebElement we = driver.findElementByAndroidUIAutomator("new UiSelector().text(\"Connect with Facebook\")");
+		we.click();
+		System.out.println("HERE");
+		
+		//driver.findElementById("com.kayak.android:id/facebookLogin").click();
 		//driver.findElementByName("Connect with Facebook").click();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		int noOfTests = Integer.parseInt(testData.getProperty("noofscriptsIF"));
-		System.out.println("Caes::"+noOfTests);
+	
 		//switch context to webview as this is an hybrid app supporting both the Native APP context and WEBVIEW aontext
-		driver.context("WEBVIEW");
+	//	driver.context("WEBVIEW");
+		Set<String> contextHandles=driver.getContextHandles();
+		for(String s:contextHandles)
+				{
+				
+				if(s.contains("WEBVIEW"))
+					{
+			
+					driver.context(s);
+					}
+				}
 	
 		while(noOfTests > 0)
 			{
