@@ -1,4 +1,5 @@
 package kayak.project.testing;
+//import required libraries
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,7 +19,11 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.android.AndroidDriver;
-
+/*
+ * Author---Chandni Balchandani
+ * This program checks the static content of the menu of this application
+ * And ensures that the application navigates to appropriate activities when user clicks on a menu item
+ */
 public class StaticContentAndNavigationTesting {
 	
 	private static AndroidDriver<WebElement> driver;
@@ -26,10 +31,11 @@ public class StaticContentAndNavigationTesting {
 	private static Properties capabilitiesValues;
 	private static DesiredCapabilities capabilities;
 	static HashMap<String,List<String>> navigationMap = new HashMap<>();
+	//expected Static Content of the Menu
 	static String[] expectedList = {"Explore", "Flight Tracker","Price Alerts", "Search", "Trips","Settings", "Directory"};
 	
 
-	
+	//setup includes setting desired capabilities 
 	public static void setUp() {
 		try {
 			capabilities = DesiredCapabilities.android();
@@ -47,6 +53,7 @@ public class StaticContentAndNavigationTesting {
 		}
 	}	
 	
+	//Hashmap which populates the expected Menu items and the list of elements which should be present in that menu
 	public static void buildMap()
 	{
 		List<String> elements1 = new ArrayList<>();
@@ -79,6 +86,7 @@ public class StaticContentAndNavigationTesting {
 	{
 		HashSet<String> staticSet = new HashSet<>();
 		setUp();
+		//initialization of Android driver
 		try {
 			driver = new AndroidDriver<WebElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 		} catch (MalformedURLException e) {
@@ -86,32 +94,41 @@ public class StaticContentAndNavigationTesting {
 			e.printStackTrace();
 		}
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		
+		//opening navigation drawer
 		WebElement e = driver.findElementByAndroidUIAutomator("new UiSelector().description(\"Open navigation drawer\")");
 		e.click();
 		
+		//collect all static content
 		List<WebElement> textElements =  driver.findElements(By.className("android.widget.TextView"));
 		for(WebElement te:textElements)
 		{
 			staticSet.add(te.getAttribute("text"));
 		}
 		
+		//check if it matches the expected list
+		System.out.println("***************************************STATIC CONTENT TESTING******************************************");
+		System.out.println("Started Static Content Testing");
 		for(int i =0; i <expectedList.length;i++)
 		{
+			System.out.println("Checking for "+expectedList[i]);
 			if(staticSet.contains(expectedList[i]))
-				System.out.println("Static Content Testing Passed "+expectedList[i]);
+			{
+				System.out.println("Successful");
+			}	
 			else
-				System.out.println("Static Content Testing Failed "+expectedList[i]);
+				System.out.println("Failed");
 		}
-		
+		System.out.println("********************************STATIC CONTENT TESTING PASSED*************************************************");
+		//close the driver
 		driver.quit();
 	}
 		
 		public static void menuNavigationTesting()
 		{
-			
 			setUp();
+			//build hashmap for menu item and a list of text in it
 			buildMap();
+			//initializing the android driver
 			try {
 				driver = new AndroidDriver<WebElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 			} catch (MalformedURLException e) {
@@ -119,33 +136,40 @@ public class StaticContentAndNavigationTesting {
 				e.printStackTrace();
 			}
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-			System.out.println(navigationMap);
+			System.out.println("*******************************************NAVIGATION TESTING**************************************");
+			System.out.println("Printing Menu Contents \n"+navigationMap);
+			//for every element in Map
 			for(Map.Entry<String,List<String>> me : navigationMap.entrySet())
 			{
+				//open navigation drawer
 				WebElement e = driver.findElementByAndroidUIAutomator("new UiSelector().description(\"Open navigation drawer\")");
 				e.click();
-				
+				//find menu item and click it
 				WebElement we = driver.findElementByAndroidUIAutomator("new UiSelector().text(\""+me.getKey()+"\")");
 				we.click();
 				
 				System.out.println("clicked "+me.getKey());
 				WebElement toolbar;
-				
+				//different elements for Search and Directory
 				if(me.getKey().equalsIgnoreCase("Search")||(me.getKey().equalsIgnoreCase("Directory")))
 				{
+					//get elements on the toolbar
 					toolbar = driver.findElement(By.className("android.widget.LinearLayout")); 
 				}
 				else
 				{
+					//get elements on the toolbar
 					toolbar = driver.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.kayak.android:id/toolbar\")");
 				}	
 					List<String> list = me.getValue();
 					List<WebElement> textElements = toolbar.findElements(By.className("android.widget.TextView"));
 					int i =0;
+					//print the text on it
 					for(WebElement te : textElements)
 					{
 						if(i<list.size())
 						{
+							//text elements on toolbar
 							System.out.println("-->attribute "+te.getAttribute("text"));
 							if(te.getAttribute("text").equalsIgnoreCase(list.get(i)));
 							i++;
@@ -154,6 +178,7 @@ public class StaticContentAndNavigationTesting {
 					System.out.println(me.getKey()+" completed");
 				
 			}
+			System.out.println("********************************NAVIGATION TESTS SUCCESSFUL*************************************************");
 			driver.quit();
 		}
 		
