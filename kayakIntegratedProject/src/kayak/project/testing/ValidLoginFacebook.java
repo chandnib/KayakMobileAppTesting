@@ -25,7 +25,6 @@ public class ValidLoginFacebook {
 	private static AndroidDriver<WebElement> driver;
 
 	private static Properties testData;
-	private static Properties capabilitiesValues;
 	/*
 	 * Initial set-up to set the emulator
 	 * Mapping the required desired capabilities
@@ -35,11 +34,10 @@ public class ValidLoginFacebook {
     public void setUp() throws FileNotFoundException, IOException{
 	
 	DesiredCapabilities capabilities=DesiredCapabilities.android();
-	capabilitiesValues  = new Properties();
-	capabilitiesValues.load(new FileInputStream("testdata/capabilities.properties"));
+	
 	capabilities.setCapability(CapabilityType.BROWSER_NAME,"");
-	capabilities.setCapability("deviceName", capabilitiesValues.getProperty("deviceName"));
-	capabilities.setCapability("platformVersion", capabilitiesValues.getProperty("platformVersion"));
+	capabilities.setCapability("deviceName", "MyAndroid");
+	capabilities.setCapability("platformVersion", "5.0.2");
 	capabilities.setCapability("platformName","Android");
 
 	testData = new Properties();
@@ -56,8 +54,8 @@ public class ValidLoginFacebook {
 	 */
 	
 	@Test
-    public void testInvalidFBLogin() throws InterruptedException {
-		
+    public void testValidFBLogin() throws InterruptedException {
+		System.out.println("Test For Valid Login with FaceBook");
 		//Set the fbemail with a valid mail id.This is left blank for security reason.While running the script a valid value will be added
 		String fbemail="";
 		//Set the fbpass with a valid password.This is left blank for security reason.While running the script a valid value will be added		
@@ -99,6 +97,8 @@ public class ValidLoginFacebook {
 					driver.context(s);
 					}
 			}
+		System.out.println("Valid Login  for Facebook credentials passed:");
+		System.out.println("***************************************");
 		}
 		
 	

@@ -16,12 +16,12 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.events.api.general.AlertEventListener;
 
 public class ValidLoginEmail {
 	private static AndroidDriver<WebElement> driver;
 
 	private static Properties testData;
-	private static Properties capabilitiesValues;
 	/*
 	 * Initial set-up to set the emulator
 	 * Mapping the required desired capabilities
@@ -32,11 +32,9 @@ public class ValidLoginEmail {
 	
 	DesiredCapabilities capabilities=DesiredCapabilities.android();
 	
-	capabilitiesValues  = new Properties();
-	capabilitiesValues.load(new FileInputStream("testdata/capabilities.properties"));
 	capabilities.setCapability(CapabilityType.BROWSER_NAME,"");
-	capabilities.setCapability("deviceName", capabilitiesValues.getProperty("deviceName"));
-	capabilities.setCapability("platformVersion", capabilitiesValues.getProperty("platformVersion"));
+	capabilities.setCapability("deviceName", "MyAndroid");
+	capabilities.setCapability("platformVersion", "5.0.2");
 	capabilities.setCapability("platformName","Android");
 
 	testData = new Properties();
@@ -45,6 +43,8 @@ public class ValidLoginEmail {
     capabilities.setCapability("appActivity","com.kayak.android.Splash");
     driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	//capabilities.setCapability("autoAcceptAlerts", true);
+	//capabilities.setCapability("autoDismissAlerts", true);
 	}
 	/*
 	 * Written By:Madhumita
@@ -54,16 +54,8 @@ public class ValidLoginEmail {
 	
 	@Test
     public void testEValidLogin() {
-		driver.findElementByAccessibilityId("Open navigation drawer").click();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-		
-		driver.findElement(By.id("com.kayak.android:id/navigation_drawer_sign_in_text")).click();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-		driver.findElementByName("Sign in with your email").click();
-		//driver.findElementByName("Sign in with your email").click();
-		//select Sign-up Option as all the cases where Count!= noOfTests teh page loaded is welcome back page and in order o test sign-up page is needed
-		driver.findElement(By.id("com.kayak.android:id/signupBtn")).click();
+		System.out.println("Test For Valid Login with Email");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.findElementByName("Sign in with your email").click();
 		//read number of test scripts to be executed
 		int noOfTests = Integer.parseInt(testData.getProperty("noofvescripts"));
@@ -71,7 +63,8 @@ public class ValidLoginEmail {
 		int count=noOfTests;//Set the count equal to number of test cases
 		while(noOfTests > 0)
 			{
-			System.out.println("Test CASE"+noOfTests);
+			System.out.println("***************************************");
+			System.out.println("TEST CASE:"+noOfTests);
 		//set the driver to select the Sign in email option for count=noOfTests the driver is already set on line 55
 			if(count!=noOfTests)
 				{
@@ -82,9 +75,9 @@ public class ValidLoginEmail {
 				}
 		
 			//Set the input field for email from the properties file
-			driver.findElementById("com.kayak.android:id/preferences_signup_username").sendKeys(testData.getProperty("nameve"+noOfTests));
+			driver.findElementByName("Save up to 35% with hotel deals").sendKeys(testData.getProperty("nameve"+noOfTests));
 			//Set the input field for Password from the properties file
-			driver.findElementById("com.kayak.android:id/preferences_signup_password").sendKeys(testData.getProperty("passve"+noOfTests));
+			driver.findElementByName("Get flight status alerts").sendKeys(testData.getProperty("passve"+noOfTests));
 			//Set the preference for email option(yes /no)
 			String email=testData.getProperty("emailve"+noOfTests);
 		
@@ -106,11 +99,17 @@ public class ValidLoginEmail {
 			driver.hideKeyboard();
 			driver.findElementByName("Sign Up").click();
 		
-			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			//The Verify alert box appears only for the first login as it then sets the preferences 
 			//which get cleared only when the app is relaunched.So a check is done to select the alert.
-			//if(count==noOfTests)
-			//	driver.findElement(By.id("android:id/button1")).click();
+			if(count==noOfTests)
+				driver.findElement(By.id("android:id/button1")).click();
+			if(!driver.findElements(By.id("android:id/button2")).isEmpty()) {
+				driver.findElement(By.id("android:id/button2")).click();
+				}
+			//System.out.println("element"+driver.findElementById("android:id/button1").getText().toString());
+			//if(count!=noOfTests )
+			//	driver.findElement(By.id("android:id/button2")).click();
 			//Select the Navigation Drawer
 			driver.findElementByAccessibilityId("Open navigation drawer").click();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -124,6 +123,8 @@ public class ValidLoginEmail {
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			driver.findElement(By.id("com.kayak.android:id/navigation_drawer_sign_in_text")).click();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			System.out.println("Valid Login Test Pass for Email credentials:"+noOfTests);
+			System.out.println("***************************************");
 
 			noOfTests--;
 		}

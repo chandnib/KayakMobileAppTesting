@@ -21,7 +21,6 @@ public class InvalidLoginEmail {
 	private static AndroidDriver<WebElement> driver;
 
 	private static Properties testData;
-	private static Properties capabilitiesValues;
 	/*
 	 * Initial set-up to set the emulator
 	 * Mapping the required desired capabilities
@@ -30,13 +29,11 @@ public class InvalidLoginEmail {
 	@Before
     public void setUp() throws FileNotFoundException, IOException{
 	
-	capabilitiesValues  = new Properties();
-	capabilitiesValues.load(new FileInputStream("testdata/capabilities.properties"));
 	DesiredCapabilities capabilities=DesiredCapabilities.android();
 	
 	capabilities.setCapability(CapabilityType.BROWSER_NAME,"");
-	capabilities.setCapability("deviceName", capabilitiesValues.getProperty("deviceName"));
-	capabilities.setCapability("platformVersion", capabilitiesValues.getProperty("platformVersion"));
+	capabilities.setCapability("deviceName", "MyAndroid");
+	capabilities.setCapability("platformVersion", "5.0.2");
 	capabilities.setCapability("platformName","Android");
 
 	testData = new Properties();
@@ -54,25 +51,22 @@ public class InvalidLoginEmail {
 	
 	@Test
     public void testInvalidLogin() {
-		driver.findElementByAccessibilityId("Open navigation drawer").click();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-		driver.findElement(By.id("com.kayak.android:id/navigation_drawer_sign_in_text")).click();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
 		driver.findElementByName("Sign in with your email").click();
-		//driver.findElementByName("Sign in with your email").click();
-		//select Sign-up Option as all the cases where Count!= noOfTests teh page loaded is welcome back page and in order o test sign-up page is needed
-		driver.findElement(By.id("com.kayak.android:id/signupBtn")).click();
 		//read number of test scripts to be executed
 		int noOfTests = Integer.parseInt(testData.getProperty("noofscripts"));
+		System.out.println("TestFor Invalid-Login");
 		System.out.println("Total Test Cases::"+noOfTests);
 		while(noOfTests > 0){
-			System.out.println("Test CASE:"+noOfTests);
+			System.out.println("***************************************");
+			System.out.println("TEST CASE:"+noOfTests);
 			//Set the input field for email from the properties file
-			driver.findElementById("com.kayak.android:id/preferences_signup_username").sendKeys(testData.getProperty("name"+noOfTests));
+			System.out.println("USERNAME:"+testData.getProperty("name"+noOfTests));
+			driver.findElementByName("Save up to 35% with hotel deals").sendKeys(testData.getProperty("name"+noOfTests));
 			//Set the input field for Password from the properties file
-			driver.findElementById("com.kayak.android:id/preferences_signup_password").sendKeys(testData.getProperty("pass"+noOfTests));
+			System.out.println("PASSWORD:"+testData.getProperty("pass"+noOfTests));
+			driver.findElementByName("Get flight status alerts").sendKeys(testData.getProperty("pass"+noOfTests));
 			//Set the preference for email option(yes /no)
+			System.out.println("EMAIL PREFERENCE:"+testData.getProperty("email"+noOfTests));
 			String email=testData.getProperty("email"+noOfTests);
 		
 			String ischecked=driver.findElementById("com.kayak.android:id/preferences_signup_deal").getAttribute("checked");
@@ -98,6 +92,7 @@ public class InvalidLoginEmail {
 			
 			driver.findElementByName("OK").click();
 			System.out.println("In-Valid Login Test Pass for credentials:"+noOfTests);
+			System.out.println("***************************************");
 			noOfTests--;
 		}
 	}
