@@ -35,16 +35,12 @@ public class RequestingInternetTest {
 			capabilities.setCapability("deviceName", capabilitiesValues.getProperty("deviceName"));
 			capabilities.setCapability("platformVersion", capabilitiesValues.getProperty("platformVersion"));
 			capabilities.setCapability("platformName","Android");
-
-			//testData = new Properties();
-			//testData.load(new FileInputStream("testdata/flightData.properties"));
 			capabilities.setCapability("appPackage", "com.kayak.android");
 			capabilities.setCapability("appActivity", "com.kayak.android.Splash");
 
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Some Error occured");
 		}
 		
 	}
