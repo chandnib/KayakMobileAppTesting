@@ -41,6 +41,7 @@ public class CheckOrientation {
 
 	/**
 	 * Initial Set up to set the capabilities and load the mobile app.
+	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
@@ -55,11 +56,10 @@ public class CheckOrientation {
 
 			// Set android deviceName desired capability. Set it Android
 			// Emulator.
-			capabilities.setCapability("deviceName", capabilitiesValues.getProperty("deviceName"));
-			
+			capabilities.setCapability("deviceName", "TA44909IZI");
 
 			// Set your emulator's android version.
-			capabilities.setCapability("platformVersion", capabilitiesValues.getProperty("platformVersion"));
+			capabilities.setCapability("platformVersion", "5.1");
 
 			// Set android platformName desired capability. It's Android in our
 			// case
@@ -79,37 +79,47 @@ public class CheckOrientation {
 	}
 
 	/**
-	 * Test1 : Check if the number of eleemnts in the landscape as well as portrait mode are same.
+	 * Test1 : Check if the number of eleemnts in the landscape as well as
+	 * portrait mode are same.
 	 */
 	@Test
 	public void test1CheckIfAllElementsExist() {
 		try {
+			System.out.println("**************************************************");
+			System.out.println("             Test Case No: 1\n");
 			// Created object of RemoteWebDriver will all set capabilities.
 			driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-			// closeButton();
+			closeButton();
 			clickLooksGoodBtn();
 			checkIfHomeScreen();
 			System.out.println("--Current screen orientation Is : " + ((AndroidDriver) driver).getOrientation());
 			checkIfAllElementsExists();
 			((AndroidDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.LANDSCAPE);
 			System.out.println("--Current screen orientation Is : " + ((AndroidDriver) driver).getOrientation());
-			// closeUpdateButton();
+			//closeUpdateButton();
 			checkIfAllElementsExists();
+			System.out.println("             Result: Test Case No: 1 Passed\n"
+					+ "**************************************************\n");
 		} catch (Exception ex) {
 			System.out.println("Unexpected error occured!");
+			System.out.println("********************\n" + "             Test Case No: 1\n" + "             Result: Test Case Failed\n"
+					+ "********************\n");
 			ex.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Check if the data is persisted when we change the orientation.
 	 */
 	@Test
 	public void test2CheckIfDataisPersisted() {
-		try{
+		try {
 			// closeUpdateButton();
-			System.out.println("Test 3 --Current screen orientation Is : " + ((AndroidDriver) driver).getOrientation());
+			// System.out.println("Test 3 --Current screen orientation Is : " +
+			// ((AndroidDriver) driver).getOrientation());
+			System.out.println("**************************************************");
+			System.out.println("             Test Case No: 2\n");
 			((AndroidDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.PORTRAIT);
 
 			String roomGuestslayout = "com.kayak.android:id/roomsGuestsRow";
@@ -122,16 +132,16 @@ public class CheckOrientation {
 				WebElement incrementroomsElement = driver.findElementById(incrementrooms);
 				if (incrementroomsElement.isDisplayed()) {
 					incrementroomsElement.click();
+//					System.out.println("Increment rooms clicked");
 				} else {
 					System.out.println(" Increment Rooms Element Textview is Hidden");
 				}
+				// Increment Guests value
 
-				// Increment Guests
 				String incrementGuests = "com.kayak.android:id/incrementGuests";
 				WebElement incrementGuestsElement = driver.findElementById(incrementGuests);
 				if (incrementGuestsElement.isDisplayed()) {
 					incrementGuestsElement.click();
-					// orignalguestsvalue = incrementGuestsElement.getText();
 				} else {
 					System.out.println(" Increment Guests Element Textview is Hidden");
 				}
@@ -139,36 +149,43 @@ public class CheckOrientation {
 				// Click OK after incrementing values
 				String okbtn = "android:id/button1";
 				WebElement okbtnElement = driver.findElementById(okbtn);
+//				System.out.println("OK clicked");
 				okbtnElement.click();
 
 				// Get the values just SET
 				String originalroomguestvalue = getRoomGuestValues();
-				System.out.println("originalroomguestvalue~~~~~~ " + originalroomguestvalue);
+				System.out.println("Original room-guest Value: " + originalroomguestvalue);
 				// Now change the orientation.
-				System.out.println("Now changing the orientation ++");
+				System.out.println("Now changing the screen orientation");
 				org.openqa.selenium.ScreenOrientation currorientation = ((AndroidDriver) driver).getOrientation();
 				switch (currorientation) {
 				case PORTRAIT:
 					((AndroidDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.LANDSCAPE);
+					Thread.sleep(5000);
 				case LANDSCAPE:
 					((AndroidDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.PORTRAIT);
+					Thread.sleep(5000);
 				}
 
 				String rotatedroomguestvalue = getRoomGuestValues();
-				System.out.println("rotatedroomguestvalue~~~~~~~~~~~~ " + rotatedroomguestvalue);
+				System.out.println("Rotated room-guest Value: " + rotatedroomguestvalue);
 
 				// now extract the values to check if they are retained.
 				Assert.assertEquals(originalroomguestvalue, rotatedroomguestvalue);
 			} else {
-				System.out.println("Room guests Textview is Hidden");
+				System.out.println("Room guests Textview is Hidden\n");
 			}
-		} catch(Exception e){
+			System.out.println("             Result: Test Case No: 2 Passed\n"
+					+ "**************************************************\n");
+		} catch (Exception e) {
+			System.out.println("********************\n" + "             Test Case No: 2\n" + "             Result: Test Case Failed\n"
+					+ "********************\n");
 			System.out.println("Error in Test2 : CheckIfDataisPersisted");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Quit the driver after use.
 	 */
@@ -180,14 +197,13 @@ public class CheckOrientation {
 			System.out.println("Error while quitting the driver ");
 			ex.printStackTrace();
 		}
-
 	}
 
 	/**
 	 * Helper method. Close the update-apk button dialog.
 	 */
 	public void closeUpdateButton() {
-		try{
+		try {
 			ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 			exec.scheduleAtFixedRate(new Runnable() {
 				@Override
@@ -201,19 +217,21 @@ public class CheckOrientation {
 					}
 				}
 			}, 0, 4, TimeUnit.SECONDS);
-		} catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("Error in closeUpdateButton");
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
-	 * Helper method.Check if all the elements exists in landscape as well as portrait method.
+	 * Helper method.Check if all the elements exists in landscape as well as
+	 * portrait method.
+	 * 
 	 * @throws NoSuchElementException
 	 */
 	private void checkIfAllElementsExists() throws NoSuchElementException {
-		try{
+		try {
 			HashMap<String, Boolean> elements = new HashMap<String, Boolean>();
 			String drawerlayout = "com.kayak.android:id/navigation_drawer_activity_drawer_layout";
 			WebElement drawerElement = driver.findElementById(drawerlayout);
@@ -268,32 +286,32 @@ public class CheckOrientation {
 			}
 			System.out.println();
 			elements.clear();
-		} catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("Error in checkIfAllElementsExists");
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
-	 * Helper method. 
-	 * Gets the values set in the Guest and room text view. 
+	 * Helper method. Gets the values set in the Guest and room text view.
 	 * Function is called in both the orientation modes.
+	 * 
 	 * @return
 	 */
 	private String getRoomGuestValues() {
 		String originalroomguestvalue = null;
 		try {
-		String scrollbar = "android.widget.ScrollView";
-		WebElement li = driver.findElementByClassName(scrollbar);
-		List<WebElement> llelements = li.findElements(By.className("android.widget.TextView"));
-		for (WebElement element : llelements) {
-			if (element.getAttribute("name").toString().contains("Room")) {
-				originalroomguestvalue = element.getAttribute("name").toString();
-				break;
+			String scrollbar = "android.widget.ScrollView";
+			WebElement li = driver.findElementByClassName(scrollbar);
+			List<WebElement> llelements = li.findElements(By.className("android.widget.TextView"));
+			for (WebElement element : llelements) {
+				if (element.getAttribute("name").toString().contains("Room")) {
+					originalroomguestvalue = element.getAttribute("name").toString();
+					break;
+				}
 			}
-		}
-		} catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("Error in checkIfAllElementsExists");
 			e.printStackTrace();
 		}
@@ -301,69 +319,71 @@ public class CheckOrientation {
 	}
 
 	/**
-	 * Helper method. 
-	 * Clicks and closes the Looks Good Button seen at the beginning otf the app.
+	 * Helper method. Clicks and closes the Looks Good Button seen at the
+	 * beginning otf the app.
+	 * 
 	 * @throws NoSuchElementException
 	 */
 	private void clickLooksGoodBtn() throws NoSuchElementException {
 		try {
-		String looksGoodBtn = "android:id/button1";
-		WebElement looksGoodView = driver.findElement((By.id(looksGoodBtn)));
-		if (looksGoodView.isDisplayed()) {
-			System.out.println("LooksGood present");
-			looksGoodView.click();
-		} else {
-			System.out.println("LooksGood absent");
-		}
-		} catch(Exception e){
+			String looksGoodBtn = "android:id/button1";
+			WebElement looksGoodView = driver.findElement((By.id(looksGoodBtn)));
+			if (looksGoodView.isDisplayed()) {
+//				System.out.println("LooksGood present");
+				looksGoodView.click();
+			} else {
+				System.out.println("LooksGood absent");
+			}
+		} catch (Exception e) {
 			System.out.println("Error in clickLooksGoodBtn");
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Helper method.
-	 * Checks if the home-screen has opened correctly as expected or not.
+	 * Helper method. Checks if the home-screen has opened correctly as expected
+	 * or not.
+	 * 
 	 * @throws NoSuchElementException
 	 */
 	private void checkIfHomeScreen() throws NoSuchElementException {
 		try {
-		String homeScreenToolbar = "com.kayak.android:id/toolbar";
-		WebElement homeToolBar = driver.findElement((By.id(homeScreenToolbar)));
-		if (homeToolBar.isDisplayed()) {
-			System.out.println("HomeScreen present");
-		} else {
-			System.out.println("HomeScreen absent");
+			String homeScreenToolbar = "com.kayak.android:id/toolbar";
+			WebElement homeToolBar = driver.findElement((By.id(homeScreenToolbar)));
+			if (homeToolBar.isDisplayed()) {
+//				System.out.println("HomeScreen present");
+			} else {
+				System.out.println("HomeScreen absent");
+			}
+		} catch (Exception e) {
+			System.out.println("Error in checkIfHomeScreen");
+			e.printStackTrace();
 		}
-	} catch(Exception e){
-		System.out.println("Error in checkIfHomeScreen");
-		e.printStackTrace();
-	}
 	}
 
 	/**
-	 * Helper method.
-	 * Closes the close button seen in the main activity of the application at top left.
+	 * Helper method. Closes the close button seen in the main activity of the
+	 * application at top left.
 	 */
 	private void closeButton() {
 		try {
-		String crossimgbtn = "com.kayak.android:id/closeBtn";
-		WebElement crsbtn = null;
-		try {
-			crsbtn = driver.findElement((By.id(crossimgbtn)));
-		} catch (NoSuchElementException nse) {
-			System.out.println("No close button found. Throwing ==> " + nse);
+			String crossimgbtn = "com.kayak.android:id/closeBtn";
+			WebElement crsbtn = null;
+			try {
+				crsbtn = driver.findElement((By.id(crossimgbtn)));
+			} catch (NoSuchElementException nse) {
+				System.out.println("No close button found. Throwing ==> " + nse);
+			}
+			if (crsbtn.isDisplayed()) {
+//				System.out.println("Crossbtn present");
+				crsbtn.click();
+			} else {
+				System.out.println("Crossbtn absent");
+			}
+		} catch (Exception e) {
+			System.out.println("Error in closeButton");
+			e.printStackTrace();
 		}
-		if (crsbtn.isDisplayed()) {
-			System.out.println("Crossbtn present");
-			crsbtn.click();
-		} else {
-			System.out.println("Crossbtn absent");
-		}
-	} catch(Exception e){
-		System.out.println("Error in closeButton");
-		e.printStackTrace();
-	}
-		
+
 	}
 }
